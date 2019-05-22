@@ -19,8 +19,8 @@ with open(args.file[0]) as file:
         for entity, definition in swagger.get('definitions').items():
             title = definition['title']
             print(f'class {stringcase.pascalcase(title)}(db.Model):\n')
-            print(f"\t__tablename__ = '{p.plural(title)}'\n")
+            print(f"    __tablename__ = '{p.plural(title)}'\n")
             for item in sorted(definition['properties'], key=lambda e: '' if e == 'id' else e):
-                print('\t', get_column_expression(definition['title'], item, definition))
+                print('   ', get_column_expression(definition['title'], item, definition))
             print()
 

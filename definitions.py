@@ -6,7 +6,7 @@ def get_column_expression(entity: str, name: str, definition: Dict[str,dict]) ->
     col_items = [func(name, definition) for func in col_funcs if func(name, definition)]
 
     if name == 'id':
-        return  f"{name} = Column({get_column_type(name, definition)}, key='{entity}_id', primary_key=True, name='id')"
+        return f"{entity}_id = Column({get_column_type(name, definition)}, key='{entity}_id', primary_key=True, name='id')"
     else:
         return f"{name} = Column({', '.join(col_items)})"
 
@@ -32,7 +32,7 @@ def get_column_type(name: str, definition: Dict[str,dict]) -> str:
                 return 'UUID'
             else:
                 if 'maxLength' in prop:
-                    return f"String{prop['maxLength']}"
+                    return f"String({prop['maxLength']})"
                 else:
                     return 'String'
         elif t == 'boolean':
@@ -40,11 +40,12 @@ def get_column_type(name: str, definition: Dict[str,dict]) -> str:
 
 
 def get_column_nullability(name: str, definition: Dict[str,dict]) -> str:
-    return 'nullable=True' if name in definition.get('required') else ''
+    return 'nullable=False' if name in definition.get('required') else ''
 
 
 def get_column_description(name: str, definition: Dict[str,dict]) -> str:
-    prop = definition.get(name)
+    prop = definition['properties'][name]
     if prop:
-        return f"doc={prop['description']}" if 'description' in prop else ''
+        desc = prop.get('description')
+        return f"comment='{desc}'" if desc else ''
 
