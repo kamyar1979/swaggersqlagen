@@ -26,7 +26,7 @@ def get_column_type(name: str, definition: Dict[str,dict]) -> str:
             else:
                 return 'Float'
         elif t == 'string':
-            if f == 'datetime':
+            if f == 'date-time':
                 return 'DateTime'
             elif f == 'uuid':
                 return 'UUID'
